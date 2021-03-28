@@ -8,19 +8,10 @@ Combining schemas
 
 .. contents:: :local:
 
-JSON Schema includes a few keywords for combining schemas together.
-Note that this doesn't necessarily mean combining schemas from
-multiple files or JSON trees, though these facilities help to enable
-that and are described in `structuring`.  Combining schemas may be as
-simple as allowing a value to be validated against multiple criteria
-at the same time.
+JSON Schema中包含了一些用于组合schema的关键字. 虽然 `structuring` 章节介绍了用于从多个文件或者
+JSON树中组合schema的方法, 但是组合schema并不是一个必选项.  组合schema就像增加多个验证条件一样简单.
 
-For example, in the following schema, the ``anyOf`` keyword is used to
-say that the given value may be valid against any of the given
-subschemas.  The first subschema requires a string with maximum
-length 5. The second subschema requires a number with a minimum value
-of 0.  As long as a value validates against *either* of these schemas,
-it is considered valid against the entire combined schema.
+举个例子, 下面的schema中 ``anyOf`` 关键字表示给定的数据需要匹配给定子schema中任意一条即可. 第一个子schema限制string的长度不超过5. 第二个子schema限制number的最小值为0. 只要给定的数据能够符合其中 *任意* 一条子schema即表示匹配通过组合后的schema.
 
 .. schema_example::
 
@@ -39,18 +30,17 @@ it is considered valid against the entire combined schema.
     --X
     -5
 
-The keywords used to combine schemas are:
+用于组合shcema的关键字有::
 
-- `allOf`: Must be valid against *all* of the subschemas
-- `anyOf`: Must be valid against *any* of the subschemas
-- `oneOf`: Must be valid against *exactly one* of the subschemas
+- `allOf`: 匹配 *所有* 子schema
+- `anyOf`: 匹配 *任意一个* 子schema
+- `oneOf`: 匹配 *有且仅有一个* 子schema
 
-All of these keywords must be set to an array, where each item is a
-schema.
+所有用于组合的关键字都必须是是数组类型, 数据内部的元素表示每个独立的子schema.
 
-In addition, there is:
+除此之外还有:
 
-- `not`: Must *not* be valid against the given schema
+- `not`: 所有的schema都 *不能* 匹配
 
 .. index::
    single: allOf
@@ -61,8 +51,7 @@ In addition, there is:
 allOf
 -----
 
-To validate against ``allOf``, the given data must be valid against all
-of the given subschemas.
+给定的数据需要通过所有的子schema校验才能通过 ``allOf`` 校验.
 
 .. schema_example::
 
@@ -77,10 +66,8 @@ of the given subschemas.
     --X
     "too long"
 
-Note that it's quite easy to create schemas that are logical
-impossibilities with ``allOf``.  The following example creates a schema
-that won't validate against anything (since something may not be both
-a string and a number at the same time):
+使用 ``allOf`` 创建的schema很容易出现逻辑上的冲突问题. 下面的例子中就演示了一个永远不可能校验通过的schema
+(因为不能存在同时既是string类型又是number类型的变量):
 
 .. schema_example::
 
@@ -95,12 +82,9 @@ a string and a number at the same time):
     --X
     -1
 
-It is important to note that the schemas listed in an `allOf`, `anyOf`
-or `oneOf` array know nothing of one another.  While it might be
-surprising, `allOf` can not be used to "extend" a schema to add more
-details to it in the sense of object-oriented inheritance.  For
-example, say you had a schema for an address in a ``definitions``
-section, and want to extend it to include an address type:
+需要注意的是 `allOf`, `anyOf` 或者 `oneOf` 数组中对应的子schema之间无任何感知.
+虽然 `allOf` 可以往schema中增加字段扩展schema, 但是 `allOf` 不能用于表示对象之间的继承关系. 举个例子, 
+假定在 ``definitions`` 内有一个address的schema, 现在想扩展address往里面增加一个type字段:
 
 .. schema_example::
 
@@ -133,9 +117,8 @@ section, and want to extend it to include an address type:
       "type": "business"
    }
 
-This works, but what if we wanted to restrict the schema so no
-additional properties are allowed?  One might try adding the
-highlighted line below:
+扩展的schema可以正常工作, 但是如果我们想限制不能有额外的字段应该怎么实现呢?
+一种思路是加上 ``additionalProperties`` 字段:
 
 .. schema_example::
 
@@ -170,15 +153,10 @@ highlighted line below:
       "type": "business"
    }
 
-Unfortunately, now the schema will reject *everything*.  This is
-because the `additionalProperties` refers to the entire schema.  And
-that entire schema includes no properties, and knows nothing about the
-properties in the subschemas inside of the `allOf` array.
+不幸的是, 扩展后的schema无法匹配 *任何输入* .因为 `additionalProperties` 是面向的整个扩展后的schema的. 
+但是扩展后的schema不包含任何属性且对 `allOf` 内的schema无感知.
 
-This shortcoming is perhaps one of the biggest surprises of the
-combining operations in JSON schema: it does not behave like
-inheritance in an object-oriented language.  There are some proposals
-to address this in the next version of the JSON schema specification.
+组合模式与面向对象语言的继承表现的不太一直可能是最大的缺点之一了. 在下个版本的JSON schema的规范中也有新的提案用来解决这个问题.
 
 .. index::
    single: anyOf
@@ -189,8 +167,7 @@ to address this in the next version of the JSON schema specification.
 anyOf
 -----
 
-To validate against ``anyOf``, the given data must be valid against any
-(one or more) of the given subschemas.
+``anyOf`` 表示给定的数据能够匹配给定规则中的一条或多条规则。
 
 .. schema_example::
 
@@ -216,8 +193,7 @@ To validate against ``anyOf``, the given data must be valid against any
 oneOf
 -----
 
-To validate against ``oneOf``, the given data must be valid against
-exactly one of the given subschemas.
+``oneOf`` 表示当且仅当给定的数据能够匹配给定规则中的一条规则：
 
 .. schema_example::
 
@@ -232,14 +208,13 @@ exactly one of the given subschemas.
     --
     9
     --X
-    // Not a multiple of either 5 or 3.
+    // 5 或 3 的倍数两条规则均不匹配.
     2
     --X
-    // Multiple of *both* 5 and 3 is rejected.
+    // 5 和 3 的倍数两条规则均匹配.
     15
 
-Note that it's possible to "factor" out the common parts of the
-subschemas.  The following schema is equivalent to the one above:
+注意可以把子schema中公共的部分提取出来. 下面的schema和上面的schema等价:
 
 .. schema_example::
 
@@ -261,13 +236,10 @@ subschemas.  The following schema is equivalent to the one above:
 not
 ---
 
-This doesn't strictly combine schemas, but it belongs in this chapter
-along with other things that help to modify the effect of schemas in
-some way.  The ``not`` keyword declares that a instance validates if
-it doesn't validate against the given subschema.
+严格来说 ``not`` 不属于是schema组合的模式, 但是 ``not`` 能够和本章的其他的schema组合使用, 
+一定程度上调整其他schema的效果. ``not`` 表示所有的给定的子schema都不匹配的模式.
 
-For example, the following schema validates against anything that is
-not a string:
+下面的例子表示匹配所有非string的数据:
 
 .. schema_example::
 
