@@ -6,19 +6,16 @@
 boolean
 -------
 
-The boolean type matches only two special values: ``true`` and
-``false``.  Note that values that *evaluate* to ``true`` or ``false``,
-such as 1 and 0, are not accepted by the schema.
+boolean 类型只有两个特殊的值:  ``true`` and ``false``. 注意那些等价于 ``true`` or ``false``
+的值(比如1、0)无法通过schema校验.
 
 .. language_specific::
 
    --Python
-   In Python, "boolean" is analogous to ``bool``.  Note that in JSON,
-   ``true`` and ``false`` are lower case, whereas in Python they are
-   capitalized (``True`` and ``False``).
+   "boolean" 类似与Python中 ``bool``. 需要注意的是, JSON中的 ``true`` 和 ``false`` 是小写的, 但是 Python是
+   首字母大写的 (``True`` and ``False``).
    --Ruby
-   In Ruby, "boolean" is analogous to ``TrueClass`` and ``FalseClass``.  Note
-   that in Ruby there is no ``Boolean`` class.
+   "boolean" 类似与Ruby中 ``TrueClass`` and ``FalseClass``. 需要注意的是Ruby中没有 ``Boolean`` 这个类.
 
 .. schema_example::
 
@@ -30,6 +27,5 @@ such as 1 and 0, are not accepted by the schema.
     --X
     "true"
     --X
-    // Values that evaluate to ``true`` or ``false`` are still not
-    // accepted by the schema:
+    // 数值上等价于 ``true`` or ``false`` 的无法通过校验:
     0
