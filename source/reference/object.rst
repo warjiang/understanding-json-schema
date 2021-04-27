@@ -8,31 +8,23 @@ object
 
 .. contents:: :local:
 
-Objects are the mapping type in JSON.  They map "keys" to "values".
-In JSON, the "keys" must always be strings.  Each of these pairs is
-conventionally referred to as a "property".
+JSON 中 Object 是映射类型, 负责将 "key" 映射到 "value", 其中"key" 必须是 string 类型. 
+一般情况下称 key-value 为 "property".
 
 .. language_specific::
    --Python
-   In Python, "objects" are analogous to the ``dict`` type.  An
-   important difference, however, is that while Python dictionaries
-   may use anything hashable as a key, in JSON all the keys
-   must be strings.
+   Python中 "object" 类似于 ``dict`` . 不同的是, JSON 的key只能是 string 类型的,
+   但 dicts 可以使用任意可hash的类型作为key.
 
-   Try not to be confused by the two uses of the word "object" here:
-   Python uses the word ``object`` to mean the generic base class for
-   everything, whereas in JSON it is used only to mean a mapping from
-   string keys to values.
+   不要混淆两个地方的 "object":  Python中用 ``object`` 来表示所有对象的基类, 
+   而在JSON中, "object"就是字面意思, 表示string类型的key到value的映射关系.
 
    --Ruby
-   In Ruby, "objects" are analogous to the ``Hash`` type. An important
-   difference, however, is that all keys in JSON must be strings, and therefore
-   any non-string keys are converted over to their string representation.
+   Ruby中 "object" 类似于 ``Hash`` 类型. 不同的是, JSON 的key只能是 string 类型的,
+   所有非字符串类型的 key 都要对应的转换成 string 类型.
 
-   Try not to be confused by the two uses of the word "object" here:
-   Ruby uses the word ``Object`` to mean the generic base class for
-   everything, whereas in JSON it is used only to mean a mapping from
-   string keys to values.
+   不要混淆两个地方的 "object":  Ruby中中用 ``Object`` 来表示所有对象的基类, 
+   而在JSON中, "object"就是字面意思, 表示string类型的key到value的映射关系.
 
 
 .. schema_example::
@@ -58,7 +50,7 @@ conventionally referred to as a "property".
         "Pluto"   : 1.25e22
     }
     --X
-    // Using non-strings as keys is invalid JSON:
+    // JSON中使用非字符串类型的key:
     {
         0.01 : "cm"
         1    : "m",
@@ -80,13 +72,9 @@ conventionally referred to as a "property".
 Properties
 ''''''''''
 
-The properties (key-value pairs) on an object are defined using the
-``properties`` keyword.  The value of ``properties`` is an object,
-where each key is the name of a property and each value is a JSON
-schema used to validate that property.
+schema 中的 ``properties`` 字段用来表示对象的属性(key-value 对), ``properties`` 对应的值是object, object上每个key对应属性的字段名, key对应的value表示校验属性值的 JSON Schema.
 
-For example, let's say we want to define a simple schema for an
-address made up of a number, street name and street type:
+比如我们想定义一个address的schema, 包括数字、街道名以及街道类型:
 
 .. schema_example::
 
@@ -103,31 +91,24 @@ address made up of a number, street name and street type:
     --
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue" }
     --X
-    // If we provide the number in the wrong type, it is invalid:
+    // 如果给 number 字段设置 string 类型的数据, 校验不通过:
     { "number": "1600", "street_name": "Pennsylvania", "street_type": "Avenue" }
     --
-    // By default, leaving out properties is valid.  See
-    // `required`.
+    // 对象中缺少字段可以通过校验. 具体可以参考 `required` 章节.
     { "number": 1600, "street_name": "Pennsylvania" }
     --
-    // By extension, even an empty object is valid:
+    // 空对象也可以通过校验:
     { }
     --
-    // By default, providing additional properties is valid:
+    // 对象中包含其他的属性也可以通过校验:
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue",
       "direction": "NW" }
 
-The ``additionalProperties`` keyword is used to control the handling
-of extra stuff, that is, properties whose names are not listed in the
-``properties`` keyword.  By default any additional properties are
-allowed.
+``additionalProperties`` 字段用来限制其他部分, 也就是那些没有在 ``properties`` 字段中列出来的属性. 默认情况下任意其他属性都能通过校验.
 
-The ``additionalProperties`` keyword may be either a boolean or an
-object.  If ``additionalProperties`` is a boolean and set to ``false``, no
-additional properties will be allowed.
+``additionalProperties`` 字段可以是 boolean 也可以是 object 类型. 如果 ``additionalProperties`` 被设置成 ``false``,  表示对象中不能出现其他属性.
 
-Reusing the example above, but this time setting
-``additionalProperties`` to ``false``.
+沿用前面的例子, 但是这次把 ``additionalProperties`` 设为 ``false``.
 
 .. schema_example::
 
@@ -145,16 +126,13 @@ Reusing the example above, but this time setting
     --
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue" }
     --X
-    // Since ``additionalProperties`` is ``false``, this extra
-    // property "direction" makes the object invalid:
+    // 由于 ``additionalProperties`` 被设置为 ``false``, 额外的 "direction" 导致校验不通过:
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue",
       "direction": "NW" }
 
-If ``additionalProperties`` is an object, that object is a schema that will
-be used to validate any additional properties not listed in ``properties``.
+如果 ``additionalProperties`` 字段是 object , 则表示校验 ``properties`` 之外的属性的 schema.
 
-For example, one can allow additional properties, but only if they are
-each a string:
+如下所示, 表示了一个允许其他属性, 但是其他属性的类型必须都是 string 类型的 schema:
 
 .. schema_example::
 
@@ -172,12 +150,11 @@ each a string:
     --
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue" }
     --
-    // This is valid, since the additional property's value is a string:
+    // 这个例子可以通过校验, 因为其他属性 direction 是 string 类型的:
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue",
       "direction": "NW" }
     --X
-    // This is invalid, since the additional property's value is not a
-    // string:
+    // 这个例子不能通过校验, 因为其他属性 office_number 是 number 类型而不是 string 类型:
     { "number": 1600, "street_name": "Pennsylvania", "street_type": "Avenue",
       "office_number": 201  }
 
@@ -191,21 +168,16 @@ each a string:
 Required Properties
 '''''''''''''''''''
 
-By default, the properties defined by the ``properties`` keyword are
-not required.  However, one can provide a list of required properties
-using the ``required`` keyword.
+一般情况下,  ``properties`` 中描述的字段都是可选的. 但是可以通过 ``required`` 关键字来限制那些字段是必选的.
 
-The ``required`` keyword takes an array of zero or more strings.  Each
-of these strings must be unique.
+``required`` 可以接受包含零个或多个string, 但需要保证 string 的唯一性.
 
 .. draft_specific::
 
    --Draft 4
-   In Draft 4, ``required`` must contain at least one string.
+   Draft 4规范中, ``required`` 字段至少包含一个string.
 
-In the following example schema defining a user record, we require
-that each user has a name and e-mail address, but we don't mind if
-they don't provide their address or telephone number:
+如下的 schema 描述了 user 对象必须包含name和e-mail字段, address或者telephone字段都是可选的.
 
 .. schema_example::
 
@@ -225,8 +197,7 @@ they don't provide their address or telephone number:
       "email": "bill@stratford-upon-avon.co.uk"
     }
     --
-    // Providing extra properties is fine, even properties not defined
-    // in the schema:
+    // 对象中可以包含schema之外的字段：
     {
       "name": "William Shakespeare",
       "email": "bill@stratford-upon-avon.co.uk",
@@ -234,8 +205,7 @@ they don't provide their address or telephone number:
       "authorship": "in question"
     }
     --X
-    // Missing the required "email" property makes the JSON document
-    // invalid:
+    // 缺少 "email" 字段导致整个JSON document校验不通过:
     {
       "name": "William Shakespeare",
       "address": "Henley Street, Stratford-upon-Avon, Warwickshire, England",
@@ -250,12 +220,7 @@ Property names
 
 |draft6|
 
-The names of properties can be validated against a schema, irrespective of their
-values. This can be useful if you don't want to enforce specific properties,
-but you want to make sure that the names of those properties follow a specific
-convention. You might, for example, want to enforce that all names are valid
-ASCII tokens so they can be used as attributes in a particular programming
-language.
+JSON Schema 可以在不约束 value 的情况下只约束 key 的命名规则. Property names字段适合那些不希望在properties中列出所有的key, 但希望能够限制 key 的命名规则的情况. 比如可能想确保所有的 key 都是合法的ASCII字符, 这样可以在代码中将这些key用作属性名.
 
 .. schema_example::
 
@@ -274,8 +239,7 @@ language.
       "001 invalid": "value"
     }
 
-Since object keys must always be strings anyway, it is implied that the
-schema given to ``propertyNames`` is always at least::
+因为 JSON 中所有的 key 都必须是 string 类型的, 也就意味着 ``propertyNames`` 对应的字段默认包含如下的规则::
 
     { "type": "string" }
 
@@ -287,9 +251,8 @@ schema given to ``propertyNames`` is always at least::
 Size
 ''''
 
-The number of properties on an object can be restricted using the
-``minProperties`` and ``maxProperties`` keywords.  Each of these
-must be a non-negative integer.
+
+object 中属性的数量可以通过 ``minProperties`` 、 ``maxProperties`` 来约束.但需要保证 ``minProperties`` 、 ``maxProperties`` 都是非负整数.
 
 .. schema_example::
 
@@ -319,34 +282,23 @@ Dependencies
 ''''''''''''
 
 .. note::
-    This is an advanced feature of JSON Schema.  Windy road ahead.
+    Dependencies 是 JSON Schema 中的高级特性.
 
-The ``dependencies`` keyword allows the schema of the object to change
-based on the presence of certain special properties.
+``dependencies`` 字段允许根据特定的属性衍生出不同的schema.
 
-There are two forms of dependencies in JSON Schema:
+JSON Schema中主要有两种类型的依赖:
 
-- **Property dependencies** declare that certain other properties must
-  be present if a given property is present.
+- **Property dependencies** 表示只有属性A存在的情况下属性B才会存在.
 
-- **Schema dependencies** declare that the schema changes when a
-  given property is present.
+- **Schema dependencies** 表示当特定属性存在的情况下, schema 才会发生变化.
 
 Property dependencies
 ^^^^^^^^^^^^^^^^^^^^^
 
-Let's start with the simpler case of property dependencies.  For
-example, suppose we have a schema representing a customer.  If you
-have their credit card number, you also want to ensure you have a
-billing address.  If you don't have their credit card number, a
-billing address would not be required.  We represent this dependency
-of one property on another using the ``dependencies`` keyword. The
-value of the ``dependencies`` keyword is an object.  Each entry in the
-object maps from the name of a property, *p*, to an array of strings
-listing properties that are required whenever *p* is present.
+先从一个简单的 property dependencies 案例开始. 假设有一个表示顾客的 schema. 有卡号的情况下必须要有账单地址. 如果没有卡号,则账单地址也是可选的属性. 可以通过 ``dependencies`` 字段来描述这种属性之间的依赖关系. ``dependencies`` 字段的值是 object , 对象中的 key-value 描述了属性 *p* 到
+其依赖属性数组之间的依赖关系.
 
-In the following example, whenever a ``credit_card`` property is
-provided, a ``billing_address`` property must also be present:
+下面的例子中, 只要 ``credit_card`` 属性出现, 则对象中必须包含 ``billing_address`` 属性.
 
 .. schema_example::
 
@@ -372,28 +324,24 @@ provided, a ``billing_address`` property must also be present:
       "billing_address": "555 Debtor's Lane"
     }
     --X
-    // This instance has a ``credit_card``, but it's missing a
-    // ``billing_address``.
+    // 对象中包含 ``credit_card`` 字段但是没有 ``billing_address`` 字段.
     {
       "name": "John Doe",
       "credit_card": 5555555555555555
     }
     --
-    // This is okay, since we have neither a ``credit_card``, or a
-    // ``billing_address``.
+    // 对象中既不包含 ``credit_card`` 字段也不包含 ``billing_address``, 这种情况也是符合要求的.
     {
       "name": "John Doe"
     }
     --
-    // Note that dependencies are not bidirectional.  It's okay to have
-    // a billing address without a credit card number.
+    // 需要注意的是依赖关系不是双向的. 包含billing address字段但不包含credit card字段也是ok的.
     {
       "name": "John Doe",
       "billing_address": "555 Debtor's Lane"
     }
 
-To fix the last issue above (that dependencies are not bidirectional),
-you can, of course, define the bidirectional dependencies explicitly:
+要想实现上面提到的效果(双向依赖关系), 也可以显式的定义两个依赖关系:
 
 .. schema_example::
 
@@ -414,15 +362,13 @@ you can, of course, define the bidirectional dependencies explicitly:
       }
     }
     --X
-    // This instance has a ``credit_card``, but it's missing a
-    // ``billing_address``.
+    // 对象中包含 ``credit_card`` 但不包含 ``billing_address``.
     {
       "name": "John Doe",
       "credit_card": 5555555555555555
     }
     --X
-    // This has a ``billing_address``, but is missing a
-    // ``credit_card``.
+    // 对象中包含 ``billing_address`` 但不包含 ``credit_card``.
     {
       "name": "John Doe",
       "billing_address": "555 Debtor's Lane"
@@ -432,11 +378,9 @@ you can, of course, define the bidirectional dependencies explicitly:
 Schema dependencies
 ^^^^^^^^^^^^^^^^^^^
 
-Schema dependencies work like property dependencies, but instead of
-just specifying other required properties, they can extend the schema
-to have other constraints.
+Schema dependencies 和 property dependencies 类似, 但schema dependencies不仅可以指定依赖的其他属性, 还能描述其他限制条件.
 
-For example, here is another way to write the above:
+上面的例子也可以通过 schema dependencies 的形式描述:
 
 .. schema_example::
 
@@ -466,16 +410,13 @@ For example, here is another way to write the above:
       "billing_address": "555 Debtor's Lane"
     }
     --X
-    // This instance has a ``credit_card``, but it's missing a
-    // ``billing_address``:
+    // 对象中包含 ``credit_card`` 但不包含 ``billing_address``:
     {
       "name": "John Doe",
       "credit_card": 5555555555555555
     }
     --
-    // This has a ``billing_address``, but is missing a
-    // ``credit_card``.  This passes, because here ``billing_address``
-    // just looks like an additional property:
+    // 这种包含 ``billing_address`` 但不包含 ``credit_card`` 的情况能通过校验, ``billing_address`` 更像是额外属性:
     {
       "name": "John Doe",
       "billing_address": "555 Debtor's Lane"
@@ -491,31 +432,13 @@ For example, here is another way to write the above:
 Pattern Properties
 ''''''''''''''''''
 
-As we saw above, ``additionalProperties`` can restrict the object so
-that it either has no additional properties that weren't explicitly
-listed, or it can specify a schema for any additional properties on
-the object.  Sometimes that isn't enough, and you may want to restrict
-the names of the extra properties, or you may want to say that, given
-a particular kind of name, the value should match a particular schema.
-That's where ``patternProperties`` comes in: it is a new keyword that
-maps from regular expressions to schemas.  If an additional property
-matches a given regular expression, it must also validate against the
-corresponding schema.
+正如前面看到的, ``additionalProperties`` 可以限制对象不能包含其他属性或者为其他属性指定schema.
+有些情况下 ``additionalProperties`` 还不够，可能还需要限制其他属性的字段名, 或者限制其他属性的value满足特定的schema. ``patternProperties`` 就是为了解决这类需求的: ``patternProperties`` 字段用于映射正则表达式到schema. 如果其他属性的key符合特定的正则表达式，则该属性的value也应该满足对应的schema.
 
 .. note::
-    When defining the regular expressions, it's important to note that
-    the expression may match anywhere within the property name.  For
-    example, the regular expression ``"p"`` will match any property
-    name with a ``p`` in it, such as ``"apple"``, not just a property
-    whose name is simply ``"p"``.  It's therefore usually less
-    confusing to surround the regular expression in ``^...$``, for
-    example, ``"^p$"``.
+    定义正则表达式的时候需要注意的是表达式可以匹配属性名的任意位置. 举个例子, 正则表达式 ``"p"`` 会匹配所有包含 ``p`` 的字段, 比如 ``"apple"`, 但不会匹配属性名为 ``"p"`` 的字段. 这样的话在正则的前后加上 ``^...$`` 能够减少混乱, 比如 ``"^p$"``.
 
-In this example, any additional properties whose names start with the
-prefix ``S_`` must be strings, and any with the prefix ``I_`` must be
-integers.  Any properties explicitly defined in the ``properties``
-keyword are also accepted, and any additional properties that do not
-match either regular expression are forbidden.
+下面的例子中, 以 ``S_`` 开头的属性必须是 string 类型, 以 ``I_`` 开头的属性必须是 integer 类型. 其他属性需要在 properties 中显式定义, 在 properties 中显式定义的属性都是符合要求的, 但是不允许包含不符合正则表达式的其他属性.
 
 .. schema_example::
 
@@ -532,24 +455,17 @@ match either regular expression are forbidden.
     --
     { "I_0": 42 }
     --X
-    // If the name starts with ``S_``, it must be a string
+    // 以 ``S_`` 开头的字段都必须是 string 类型的
     { "S_0": 42 }
     --X
-    // If the name starts with ``I_``, it must be an integer
+    // 以 ``I_`` 开头的字段都必须是 integer 类型的
     { "I_42": "This is a string" }
     --X
-    // This is a key that doesn't match any of the regular
-    // expressions:
+    // 下面是一个不符合任何正则的key:
     { "keyword": "value" }
 
-``patternProperties`` can be used in conjunction with
-``additionalProperties``.  In that case, ``additionalProperties`` will
-refer to any properties that are not explicitly listed in
-``properties`` and don't match any of the ``patternProperties``.  In
-the following example, based on above, we add a ``"builtin"``
-property, which must be a number, and declare that all additional
-properties (that are neither built-in or matched by
-``patternProperties``) must be strings:
+``patternProperties`` 会与 ``additionalProperties`` 配合使用.  
+这种情况下 ``additionalProperties`` 表示那些既没有显式在 ``properties`` 中申明也不符合 ``patternProperties``的属性. 在上面的例子的基础上, 增加了 ``"builtin"`` 属性, 必须是 number 类型, 同时申明了所有的其他属性(非builtin、不匹配 ``patternProperties`` )必须是 string 类型的:
 
 .. schema_example::
 
@@ -567,9 +483,8 @@ properties (that are neither built-in or matched by
     --
     { "builtin": 42 }
     --
-    // This is a key that doesn't match any of the regular
-    // expressions:
+    // "keyword" 不符合正则、也不是builtin, 命中 additionalProperties 规则, 保证字段是string类型即可通过校验
     { "keyword": "value" }
     --X
-    // It must be a string:
+    // "keyword" 必须是 string 类型:
     { "keyword": 42 }
