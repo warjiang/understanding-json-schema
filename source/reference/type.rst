@@ -7,10 +7,9 @@
 Type-specific keywords
 ======================
 
-The ``type`` keyword is fundamental to JSON Schema.  It specifies the
-data type for a schema.
+``type`` 字段是 JSON Schema 的基石, 描述了 schema 的数据类型.
 
-At its core, JSON Schema defines the following basic types:
+JSON Schema 定义了以下几种基本类型:
 
    - `string`
    - `numeric`
@@ -19,14 +18,12 @@ At its core, JSON Schema defines the following basic types:
    - `boolean`
    - `null`
 
-These types have analogs in most programming languages, though they
-may go by different names.
+尽管JSON Schema 和 具体编程语言中 的类型名称不一定相同, 但表达的含义都是类似的.
 
 .. language_specific::
 
     --Python
-    The following table maps from the names of JavaScript types to
-    their analogous types in Python:
+    下表中列出了JavaScript中的类型到Python中类型的映射关系:
 
     +----------+-----------+
     |JavaScript|Python     |
@@ -48,17 +45,14 @@ may go by different names.
 
     .. rubric:: Footnotes
 
-    .. [#1] Since JavaScript strings always support unicode, they are
-            analogous to ``unicode`` on Python 2.x and ``str`` on
-            Python 3.x.
+    .. [#1] 由于 JavaScript 中string一直都是unicode, 与 Python 2.x 中的 ``unicode`` 类型
+            或者 Python 3.x 中的 ``str`` 类似.
 
-    .. [#2] JavaScript does not have separate types for integer and
-            floating-point.
+    .. [#2] JavaScript 中不区分 整数和浮点数.
 
 
     --Ruby
-    The following table maps from the names of JavaScript types to
-    their analogous types in Ruby:
+    下表中列出了JavaScript中的类型到Ruby中类型的映射关系:
 
     +----------+----------------------+
     |JavaScript|Ruby                  |
@@ -79,19 +73,17 @@ may go by different names.
 
     .. rubric:: Footnotes
 
-    .. [#3] JavaScript does not have separate types for integer and
-            floating-point.
+    .. [#3] JavaScript 中不区分 整数和浮点数.
 
-The ``type`` keyword may either be a string or an array:
+``type`` 字段既可以是 string 也可以是 array:
 
-- If it's a string, it is the name of one of the basic types above.
+- 如果 ``type`` 是string, 则表示上面基础类型名之一.
 
-- If it is an array, it must be an array of strings, where each string
-  is the name of one of the basic types, and each element is unique.
-  In this case, the JSON snippet is valid if it matches *any* of the
-  given types.
+- 如果 ``type`` 是array, 则必须为string数组, 数组中每个string都必须要是基础类型名中的一个, 
+  同时需要确保数组中的string是唯一的. 这种情况下, 只要给定的JSON数据符合 *任意* 一个类型的要求
+  则表示该JSON是有效的.
 
-Here is a simple example of using the ``type`` keyword:
+如下是使用 ``type`` 字段的简单案例:
 
 .. schema_example::
 
@@ -101,11 +93,11 @@ Here is a simple example of using the ``type`` keyword:
    --
    42.0
    --X
-   // This is not a number, it is a string containing a number.
+   // 非数字, 而是数字字符串.
    "42"
 
-In the following example, we accept strings and numbers, but not
-structured data types:
+
+下面的案例中, 可以接受string或者number类型的数据,但不支持结构化的数据类型:
 
 .. schema_example::
 
@@ -117,8 +109,5 @@ structured data types:
    --X
    ["Life", "the universe", "and everything"]
 
-For each of these types, there are keywords that only apply to those
-types.  For example, numeric types have a way of specifying a numeric
-range, that would not be applicable to other types.  In this
-reference, these validation keywords are described along with each of
-their corresponding types in the following chapters.
+每种类型都会仅适用于该类型的关键字. 比如 numeric 类型可以某种方式来描述数据的范围, 但这种方式不适用于其他数据类型.
+后面的章节中将对这些类型及其校验关键字进行介绍.
