@@ -8,16 +8,14 @@ string
 
 .. contents:: :local:
 
-The ``string`` type is used for strings of text.  It may contain
-Unicode characters.
+``string`` 用来表示文本字符串, 可能会包含 unicode 字符.
 
 .. language_specific::
 
    --Python
-   In Python, "string" is analogous to the ``unicode`` type on Python
-   2.x, and the ``str`` type on Python 3.x.
+   Python中 "string" 类似于 python2.x 中的 ``unicode`` 类型, python3.x 中的 ``str`` 类型.
    --Ruby
-   In Ruby, "string" is analogous to the ``String`` type.
+   Ruby中, "string" 类似于 ``String`` 类型.
 
 .. schema_example::
 
@@ -25,7 +23,7 @@ Unicode characters.
     --
     "This is a string"
     --
-    // Unicode characters:
+    // unicode 字符:
     "Déjà vu"
     --
     ""
@@ -42,9 +40,7 @@ Unicode characters.
 Length
 ''''''
 
-The length of a string can be constrained using the ``minLength`` and
-``maxLength`` keywords.  For both keywords, the value must be a
-non-negative number.
+string的长度可以用 ``minLength`` 和 ``maxLength`` 字段进行约束, 这两个字段都必须是非负整数.
 
 .. schema_example::
 
@@ -71,24 +67,14 @@ Regular Expressions
 
 .. _pattern:
 
-The ``pattern`` keyword is used to restrict a string to a particular
-regular expression.  The regular expression syntax is the one defined
-in JavaScript (`ECMA 262
+``pattern`` 字段用于约束字符串符合特定的正则表达式. 正则语法参考JavaScript中的正则语法(`ECMA 262
 <http://www.ecma-international.org/publications/standards/Ecma-262.htm>`__
-specifically).  See `regular-expressions` for more information.
+定义). 更多细节参考 `regular-expressions` 章节.
 
 .. note::
-    When defining the regular expressions, it's important to note that
-    the string is considered valid if the expression matches anywhere
-    within the string.  For example, the regular expression ``"p"``
-    will match any string with a ``p`` in it, such as ``"apple"`` not
-    just a string that is simply ``"p"``.  Therefore, it is usually
-    less confusing, as a matter of course, to surround the regular
-    expression in ``^...$``, for example, ``"^p$"``, unless there is a
-    good reason not to do so.
+    只要正则表达式匹配字符串的子串即可认为该字符串通过校验. 比如, 正则表达式 ``"p"`` 可以匹配任何包含 ``p`` 的字符串, 比如 ``"apple"`` , 但是不能匹配单独的字符串 ``p`` . 这样看起似乎有些令人困惑, 但考虑到可以将正则中包含在 ``^...$`` (比如 ``"^p$"``), 这样也是可以接受的.
 
-The following example matches a simple North American telephone number
-with an optional area code:
+下面的例子演示了一个带可选区号的北美号码匹配的案例:
 
 .. schema_example::
 
@@ -114,22 +100,15 @@ with an optional area code:
 Format
 ''''''
 
-The ``format`` keyword allows for basic semantic validation on certain
-kinds of string values that are commonly used.  This allows values to
-be constrained beyond what the other tools in JSON Schema, including
-`regular-expressions` can do.
+``format`` 字段允许对某些内容进行基本的语义化验证. 相较于 JSON Schema 中的其他能力(包括 `regular-expressions` ), format 提供了更高级的约束能力.
 
 .. note::
 
-    JSON Schema implementations are not required to implement this
-    part of the specification, and many of them do not.
+    具体的JSON Schema实现不要求实现format这部分, 许多约束已经停止使用了.
 
-There is a bias toward networking-related formats in the JSON Schema
-specification, most likely due to its heritage in web technologies.
-However, custom formats may also be used, as long as the parties
-exchanging the JSON documents also exchange information about the
-custom format types.  A JSON Schema validator will ignore any format
-type that it does not understand.
+JSON Schema 规范中关于与网络相关的format更多些, 这可能与JSON Schema脱胎于web技术有关.
+当然也可以使用自定义format, 只要JSON文档交互双方都包含自定义format定义即可. 
+JSON Schema验证程序会忽略不能识别的format规则.
 
 .. index::
    single: format
@@ -137,8 +116,7 @@ type that it does not understand.
 Built-in formats
 ^^^^^^^^^^^^^^^^
 
-The following is the list of formats specified in the JSON Schema
-specification.
+以下是JSON Schema规范中列出的 formats.
 
 .. index::
    single: date-time
@@ -151,17 +129,16 @@ specification.
 Dates and times
 ***************
 
-Dates and times are represented in `RFC 3339, section 5.6
-<https://json-schema.org/latest/json-schema-validation.html#RFC3339>`_. This is
-a subset of the date format also commonly known as `ISO8601 format
-<https://www.iso.org/iso-8601-date-and-time-format.html>`_.
+日期和时间规范可以参考 `RFC 3339, section 5.6
+<https://json-schema.org/latest/json-schema-validation.html#RFC3339>`_. 
+也是 `ISO8601 format
+<https://www.iso.org/iso-8601-date-and-time-format.html>`_ 的子集.
 
-- ``"date-time"``: Date and time together, for example,
-  ``2018-11-13T20:20:39+00:00``.
+- ``"date-time"``: 同时包含日期、时间, 比如, ``2018-11-13T20:20:39+00:00``.
 
-- ``"time"``: |draft7| Time, for example, ``20:20:39+00:00``
+- ``"time"``: |draft7| 时间, 比如, ``20:20:39+00:00``
 
-- ``"date"``: |draft7| Date, for example, ``2018-11-13``.
+- ``"date"``: |draft7| 日期, 比如, ``2018-11-13``.
 
 .. index::
    single: email
@@ -172,11 +149,10 @@ a subset of the date format also commonly known as `ISO8601 format
 Email addresses
 ***************
 
-- ``"email"``: Internet email address, see `RFC 5322,
+- ``"email"``: email地址, 具体参考 `RFC 5322,
   section 3.4.1 <http://tools.ietf.org/html/rfc5322#section-3.4.1>`_.
 
-- ``"idn-email"``: |draft7| The internationalized form of an Internet email address, see
-  `RFC 6531 <https://tools.ietf.org/html/rfc6531>`_.
+- ``"idn-email"``: |draft7| 国际化的email地址， 具体参考 `RFC 6531 <https://tools.ietf.org/html/rfc6531>`_.
 
 .. index::
    single: hostname
@@ -187,10 +163,10 @@ Email addresses
 Hostnames
 *********
 
-- ``"hostname"``: Internet host name, see `RFC 1034, section 3.1
+- ``"hostname"``: 主机名, 参考 `RFC 1034, section 3.1
   <http://tools.ietf.org/html/rfc1034#section-3.1>`_.
 
-- ``"idn-hostname"``: |draft7| An internationalized Internet host name, see
+- ``"idn-hostname"``: |draft7| 国际化的主机名, 具体参考
   `RFC5890, section 2.3.2.3
   <https://tools.ietf.org/html/rfc5890#section-2.3.2.3>`_.
 
@@ -203,12 +179,11 @@ Hostnames
 IP Addresses
 ************
 
-- ``"ipv4"``: IPv4 address, according to dotted-quad ABNF syntax as
-  defined in `RFC 2673, section 3.2
-  <http://tools.ietf.org/html/rfc2673#section-3.2>`_.
+- ``"ipv4"``: IPv4 地址, 符合 `RFC 2673, section 3.2
+  <http://tools.ietf.org/html/rfc2673#section-3.2>`_ 定义的点分四进制ABNF语法.
 
-- ``"ipv6"``: IPv6 address, as defined in `RFC 2373, section 2.2
-  <http://tools.ietf.org/html/rfc2373#section-2.2>`_.
+- ``"ipv6"``: IPv6 地址, 符合 `RFC 2373, section 2.2
+  <http://tools.ietf.org/html/rfc2373#section-2.2>`_ 定义.
 
 .. index::
    single: uri
@@ -223,29 +198,21 @@ IP Addresses
 Resource identifiers
 ********************
 
-- ``"uri"``: A universal resource identifier (URI), according to
-  `RFC3986 <http://tools.ietf.org/html/rfc3986>`_.
+- ``"uri"``: `RFC3986 <http://tools.ietf.org/html/rfc3986>`_ 定义的统一资源定位符 (URI).
 
-- ``"uri-reference"``: |draft6| A URI Reference (either a URI or a
-  relative-reference), according to `RFC3986, section 4.1
-  <http://tools.ietf.org/html/rfc3986#section-4.1>`_.
+- ``"uri-reference"``: |draft6| `RFC3986, section 4.1
+  <http://tools.ietf.org/html/rfc3986#section-4.1>`_ 定义的URI引用(URI或者相对引用).
 
-- ``"iri"``: |draft7| The internationalized equivalent of a "uri",
-  according to `RFC3987 <https://tools.ietf.org/html/rfc3987>`_.
+- ``"iri"``: |draft7| 国际化的 "uri" `RFC3987 <https://tools.ietf.org/html/rfc3987>`_.
 
-- ``"iri-reference"``: |draft7| The internationalized equivalent of a
-  "uri-reference", according to `RFC3987 <https://tools.ietf.org/html/rfc3987>`_
+- ``"iri-reference"``: |draft7| 国际化的 "uri-reference" `RFC3987 <https://tools.ietf.org/html/rfc3987>`_
 
-If the values in the schema have the ability to be relative to a particular source
-path (such as a link from a webpage), it is generally better practice to use
-``"uri-reference"`` (or ``"iri-reference"``) rather than ``"uri"`` (or
-``"iri"``). ``"uri"`` should only be used when the path must be absolute.
+如果 schema 中包含相对路径资源(比如网页链接), 一般情况下最好使用 ``"uri-reference"`` (或者 ``"iri-reference"``) 而不是 ``"uri"`` (或者 ``"iri"`` ). 只有绝对路径时才应该使用 ``"uri"`` .
 
 .. draft_specific::
 
    --Draft 4
-   Draft 4 only includes ``"uri"``, not ``"uri-reference"``. Therefore, there is
-   some ambiguity around whether ``"uri"`` should accept relative paths.
+   Draft 4中只包含了 ``"uri"``, 不包含 ``"uri-reference"`` . 因此关于 "uri" 是否应该接受相对路径还存在歧义.
 
 .. index::
    single: uri-template
@@ -254,9 +221,7 @@ path (such as a link from a webpage), it is generally better practice to use
 URI template
 ************
 
-- ``"uri-template"``: |draft6| A URI Template (of any level) according to
-  `RFC6570 <https://tools.ietf.org/html/rfc6570>`_. If you don't already know
-  what a URI Template is, you probably don't need this value.
+- ``"uri-template"``: |draft6| `RFC6570 <https://tools.ietf.org/html/rfc6570>`_ 中定义的 URI 模版(任意级别). 如果还不知道URI模版是什么, 大概率也不需要这种类型.
 
 .. index::
    single: json-pointer
@@ -267,14 +232,10 @@ URI template
 JSON Pointer
 ************
 
-- ``"json-pointer"``: |draft6| A JSON Pointer, according to `RFC6901
-  <https://tools.ietf.org/html/rfc6901>`_. There is more discussion on the use
-  of JSON Pointer within JSON Schema in `structuring`. Note that this should be
-  used only when the entire string contains only JSON Pointer content, e.g.
-  ``/foo/bar``. JSON Pointer URI fragments, e.g. ``#/foo/bar/`` should use
-  ``"uri-reference"``.
+- ``"json-pointer"``: |draft6| `RFC6901
+  <https://tools.ietf.org/html/rfc6901>`_ 定义的JSON Pointer. 对于构造复杂JSON Schema是否应该是用JSON Pointer还有很多讨论. 注意仅当整个字符串中只包含JSON Pointer(比如 ``/foo/bar`` )才能使用JSON Pointer. JSON Pointer的URI片段比如( ``#/foo/bar/`` )应当使用 ``"uri-reference"``.
 
-- ``"relative-json-pointer"``: |draft7| A `relative JSON pointer
+- ``"relative-json-pointer"``: |draft7| `relative JSON pointer
   <https://tools.ietf.org/html/draft-handrews-relative-json-pointer-01>`_.
 
 .. index::
@@ -284,12 +245,10 @@ JSON Pointer
 Regular Expressions
 *******************
 
-- ``"regex"``: |draft7| A regular expression, which should be valid according to
-  the `ECMA 262
+- ``"regex"``: |draft7| 正则表达式, 需要符合 `ECMA 262
   <http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-262.pdf>`_
-  dialect.
+  规范.
 
-Be careful, in practice, JSON schema validators are only required to accept the
-safe subset of `regular-expressions` described elsewhere in this document.
+实践中JSON Schema校验程序只需要实现文档中涉及的 `regular-expressions` 子集即可.
 
 .. TODO: Add some examples for ``format`` here
