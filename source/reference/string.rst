@@ -233,7 +233,7 @@ JSON Pointer
 ************
 
 - ``"json-pointer"``: |draft6| `RFC6901
-  <https://tools.ietf.org/html/rfc6901>`_ 定义的JSON Pointer. 对于构造复杂JSON Schema是否应该是用JSON Pointer还有很多讨论. 注意仅当整个字符串中只包含JSON Pointer(比如 ``/foo/bar`` )才能使用JSON Pointer. JSON Pointer的URI片段比如( ``#/foo/bar/`` )应当使用 ``"uri-reference"``.
+  <https://tools.ietf.org/html/rfc6901>`_ 定义的JSON Pointer. 在 `structuring` 会更多的提到 JSON Pointer 用法. 注意仅当整个字符串中只包含JSON Pointer(比如 ``/foo/bar`` )才能使用JSON Pointer. JSON Pointer URI片段比如( ``#/foo/bar/`` )应当使用 ``"uri-reference"``.
 
 - ``"relative-json-pointer"``: |draft7| `relative JSON pointer
   <https://tools.ietf.org/html/draft-handrews-relative-json-pointer-01>`_.
