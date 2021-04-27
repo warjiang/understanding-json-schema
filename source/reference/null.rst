@@ -6,16 +6,14 @@
 null
 ----
 
-The null type is generally used to represent a missing value.  When a
-schema specifies a ``type`` of ``null``, it has only one acceptable
-value: ``null``.
+一般情况 null 类型用来表示缺省值. 如果 schema 指定 ``type`` 为 ``null``, 此时只有 ``null`` 能通过校验.
 
 .. language_specific::
 
    --Python
-   In Python, ``null`` is analogous to ``None``.
+   Python 中 ``null`` 类似于 ``None``.
    --Ruby
-   In Ruby, ``null`` is analogous to ``nil``.
+   Ruby 中 ``null`` 类似于 ``nil``.
 
 .. schema_example::
 
