@@ -8,72 +8,53 @@ Regular Expressions
 
 .. contents:: :local:
 
-The :ref:`pattern <pattern>` and `patternProperties` keywords use
-regular expressions to express constraints.  The regular expression
-syntax used is from JavaScript (`ECMA 262
-<http://www.ecma-international.org/publications/standards/Ecma-262.htm>`__,
-specifically). However, that complete syntax is not widely supported,
-therefore it is recommended that you stick to the subset of that
-syntax described below.
+The :ref:`pattern <pattern>` and `patternProperties` 字段使用正则表达式来描述约束. 
+正则语法可以参考 JavaScript 中正则语法 (`ECMA 262
+<http://www.ecma-international.org/publications/standards/Ecma-262.htm>`__). 
+但是并不会支持正则中的全部语法, 目前推荐使用如下列出的正则语法的子集.
 
-- A single unicode character (other than the special characters
-  below) matches itself.
+- 除了特殊字符外, 单个 unicode 字符能与自身匹配.
 
-- ``.``: Matches any character except line break characters. (Be aware that what
-  constitutes a line break character is somewhat dependent on your platform and
-  language environment, but in practice this rarely matters).
+- ``.``: 匹配除了换行符意外的所有字符.(需要注意换行符与平台、语言环境有关).
 
-- ``^``: Matches only at the beginning of the string.
+- ``^``: 匹配字符串的开头.
 
-- ``$``: Matches only at the end of the string.
+- ``$``: 匹配字符串结尾.
 
-- ``(...)``: Group a series of regular expressions into a single
-  regular expression.
+- ``(...)``: 将一串正则表达式分组称一个正则表达式.
 
-- ``|``: Matches either the regular expression preceding or following
-  the ``|`` symbol.
+- ``|``: 匹配 ``|`` 之前或之后的任意字符.
 
-- ``[abc]``: Matches any of the characters inside the square brackets.
+- ``[abc]``: 匹配方括号内的任意字符.
 
-- ``[a-z]``: Matches the range of characters.
+- ``[a-z]``: 匹配范围内的字符.
 
-- ``[^abc]``: Matches any character *not* listed.
+- ``[^abc]``: 匹配 *非* 方括号内的字符.
 
-- ``[^a-z]``: Matches any character outside of the range.
+- ``[^a-z]``: 匹配非范围内的字符.
 
-- ``+``: Matches one or more repetitions of the preceding regular
-  expression.
+- ``+``: 匹配前面一个或多个正则表达式.
 
-- ``*``: Matches zero or more repetitions of the preceding regular
-  expression.
+- ``*``: 匹配前面零个或多个正则表达式.
 
-- ``?``: Matches zero or one repetitions of the preceding regular
-  expression.
+- ``?``: 匹配前面零个或一个正则表达式.
 
-- ``+?``, ``*?``, ``??``: The ``*``, ``+``, and ``?`` qualifiers are
-  all greedy; they match as much text as possible. Sometimes this
-  behavior isn't desired and you want to match as few characters as
-  possible.
+- ``+?``, ``*?``, ``??``:  ``*``, ``+`` 和 ``?`` 限定词都是贪婪匹配的。会尽可能尽可能多的文本. 有时候这种行为是不符合预期的, 可能希望匹配的字符越少越好.
   
-- ``(?!x)``, ``(?=x)``: Negative and positive lookahead.
+- ``(?!x)``, ``(?=x)``: 先行断言, 后行断言.
 
-- ``{x}``: Match exactly ``x`` occurrences of the preceding regular
-  expression.
+- ``{x}``: 精确匹配前面  ``x`` 遍正则表达式.
 
-- ``{x,y}``: Match at least ``x`` and at most ``y`` occurrences of
-  the preceding regular expression.
+- ``{x,y}``: 匹配前面至少 ``x`` 且至多 ``y`` 遍正则表达式.
 
-- ``{x,}``: Match ``x`` occurrences or more of the preceding regular
-  expression.
+- ``{x,}``: 匹配前面至少出现 ``x`` 遍正则表达式.
 
-- ``{x}?``, ``{x,y}?``, ``{x,}?``: Lazy versions of the above
-  expressions.
+- ``{x}?``, ``{x,y}?``, ``{x,}?``: 上述表达式的惰性版本.
 
 Example
 '''''''
 
-The following example matches a simple North American telephone number
-with an optional area code:
+如下示例表示匹配带可选区号的北美电话号码:
 
 .. schema_example::
 
